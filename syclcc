@@ -1,0 +1,18 @@
+#!/bin/bash
+
+   ##########################################################################
+   #                                                                        #
+   # Copyright (c) 2016-2017 Paul Keir, University of the West of Scotland. #
+   #                                                                        #
+   ##########################################################################
+
+usage() { echo syclcc: error: $2 >&2; exit $1; }
+
+[ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
+
+COMPUTECPP_BASENAME=`basename "$COMPUTECPP"`
+#echo $COMPUTECPP_BASENAME detected.
+SYCLCC_FILENAME=syclcc-$COMPUTECPP_BASENAME.sh
+$SYCLCC_FILENAME "$@"
+exit $?
+
