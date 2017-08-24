@@ -1,7 +1,6 @@
-Collection of samples, documentation and utilities for using ComputeCpp,
-Codeplay's beta SYCL implementation:
+Collection of scripts for compiling source code using ComputeCpp,
+Codeplay's beta [SYCL](https://github.com/codeplaysoftware/computecpp-sdk) implementation:
 
-  [link](https://github.com/codeplaysoftware/computecpp-sdk)
 
 git clone https://github.com/codeplaysoftware/computecpp-sdk
 . syclcc=next.sh
