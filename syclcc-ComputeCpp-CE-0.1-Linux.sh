@@ -19,8 +19,6 @@ usage() { echo syclcc: error: $2 >&2; exit $1; }
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
 
-BASEDIR=$(dirname "$0")
-
 OFILE="a.out"
 while [[ $# > 0 ]]; do
 
@@ -65,7 +63,7 @@ do
 
   FILENAME=_`echo $FILEPATH | tr '//' '#'`  # prepend _ and replace /s with #s
   OBJFILES="$TMP/$FILENAME.o $OBJFILES"
-  $BASEDIR/$COMPUTECPP/bin/compute++ -std=c++0x -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
+  $COMPUTECPP/bin/compute++ -std=c++0x -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 #  $COMPUTECPP/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
