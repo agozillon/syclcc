@@ -14,7 +14,14 @@ RELEASES=(
 "ComputeCpp-16.03-Linux"
 "ComputeCpp-16.05-Linux"
 "ComputeCpp-CE-0.1-Linux"
+"ComputeCpp-CE-0.2.0-Linux"
+"ComputeCpp-CE-0.2.1-Linux"
 "ComputeCpp-CE-0.3.0-Linux"
+"ComputeCpp-CE-0.3.1-Linux"
+"ComputeCpp-CE-0.3.2-Linux"
+"ComputeCpp-CE-0.3.3-Ubuntu.16.04-64bit"
+"ComputeCpp-CE-0.4.0-Ubuntu-16.04-64bit"
+"ComputeCpp-CE-0.5.0-Ubuntu-16.04-64bit"
 )
 NUM_RELEASES=${#RELEASES[@]}
 
@@ -38,8 +45,8 @@ COMPUTECPP_DIRNAME=`dirname "$COMPUTECPP"`
 
 INDEX=$(array_find "$COMPUTECPP_BASENAME" "${RELEASES[@]}")
 
-# Increment INDEX - else if it's the final index - set it to 0
-[[ $INDEX < $((NUM_RELEASES-1)) ]] && INDEX=$((INDEX+1)) || INDEX=0
+# Set the INDEX to 0 if it's the final index - else increment Index
+[[ $INDEX == $((NUM_RELEASES - 1)) ]] && INDEX=0 || INDEX=$((INDEX+1))
 
 NEWCOMPUTECPP="$COMPUTECPP_DIRNAME"/"${RELEASES[INDEX]}"
 
