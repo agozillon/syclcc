@@ -13,6 +13,8 @@ usage() { echo syclcc: error: $2 >&2; exit $1; }
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
   
+COMPILE_ONLY=0
+PREPROCESS_ONLY=0
 OFILE="a.out"
 while [[ $# > 0 ]]; do
 
@@ -32,7 +34,7 @@ while [[ $# > 0 ]]; do
     -v)         CFLAGS="$CFLAGS $1"        ;;
     -dM)        CFLAGS="$CFLAGS $1"        ;;
     -E) PREPROCESS_ONLY=1                  ;; # stop after preprocessing stage
-    -g)         CFLAGS="$CFLAGS $1"        ;;
+    -g)          DEBUG="$1"                ;; # still doesn't work with CE 0.5
     -std=?*)    CFLAGS="$CFLAGS $1"        ;;
     -rdynamic) LDFLAGS="$LDFLAGS $1"       ;;
     -o?*) OFILE=${1:2}; OFILE_NAMED=1;     ;; # "-o" = the 2 dropped chars
@@ -72,7 +74,7 @@ do
  # $COMPUTECPP/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
-  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include -I$TMP $OPTS -O2 $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH
+  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH
 
   if ((COMPILE_ONLY)); then            # Handle -c
     if ((OFILE_NAMED)); then
