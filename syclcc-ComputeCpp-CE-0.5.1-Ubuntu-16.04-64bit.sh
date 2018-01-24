@@ -13,6 +13,8 @@ usage() { echo syclcc: error: $2 >&2; exit $1; }
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
   
+COMPILE_ONLY=0
+PREPROCESS_ONLY=0
 OFILE="a.out"
 while [[ $# > 0 ]]; do
 
@@ -30,7 +32,9 @@ while [[ $# > 0 ]]; do
     -O?*)         OPTS="$OPTS $1";         ;; # e.g. -O3
     -f?*)       CFLAGS="$CFLAGS $1"        ;; # consider ;& for some code golf
     -v)         CFLAGS="$CFLAGS $1"        ;;
-    -g)          DEBUG="$1"                ;; # n.b. This would kill compute++
+    -dM)        CFLAGS="$CFLAGS $1"        ;;
+    -E) PREPROCESS_ONLY=1                  ;; # stop after preprocessing stage
+    -g)          DEBUG="$1"                ;; # still doesn't work with CE 0.5
     -std=?*)    CFLAGS="$CFLAGS $1"        ;;
     -rdynamic) LDFLAGS="$LDFLAGS $1"       ;;
     -o?*) OFILE=${1:2}; OFILE_NAMED=1;     ;; # "-o" = the 2 dropped chars
@@ -41,7 +45,7 @@ while [[ $# > 0 ]]; do
   shift # $2 becomes $1; $3 becomes $2 etc.
 done
 
-if ((COMPILE_ONLY)) && ((OFILE_NAMED)) && [ $# -gt 1 ] ; then
+if ((COMPILE_ONLY && OFILE_NAMED)) && [ $# -gt 1 ] ; then
   usage 3 "cannot specify -o with -c, with multiple files"
 fi
 
@@ -55,9 +59,18 @@ do
     continue
   fi
 
+  if ((PREPROCESS_ONLY)); then      # Handle -E
+    if ((OFILE_NAMED)); then
+      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread -o $OFILE $FILEPATH
+    else
+      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread           $FILEPATH
+    fi
+    continue
+  fi
+
   FILENAME=_`echo $FILEPATH | tr '//' '#'`  # prepend _ and replace /s with #s
   OBJFILES="$TMP/$FILENAME.o $OBJFILES"
-  $COMPUTECPP/bin/compute++ -std=c++0x -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
+  $COMPUTECPP/bin/compute++ -std=c++11 -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
  # $COMPUTECPP/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
@@ -72,6 +85,6 @@ do
   fi
 done
 
-if [ -z "$COMPILE_ONLY" ]; then
+if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then
   $HOST_CXX -std=c++1z -pthread $OBJFILES -o $OFILE -rdynamic $OPTS -O2 $DEBUG $CFLAGS $LIBPATHS -L$COMPUTECPP/lib/ -lComputeCpp -lOpenCL $LDFLAGS
 fi
