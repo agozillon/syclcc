@@ -1,10 +1,10 @@
 #!/bin/bash
 
-   ##########################################################################
-   #                                                                        #
-   # Copyright (c) 2016-2017 Paul Keir, University of the West of Scotland. #
-   #                                                                        #
-   ##########################################################################
+     #####################################################################
+     #                                                                   #
+     # Copyright (c) 2016 Paul Keir, University of the West of Scotland. #
+     #                                                                   #
+     #####################################################################
 
 # For now, use GCC-4.9: it seems more recent GCCs (e.g. GCC 5.3) use a very
 # different std::string implementation. ComputeCpp's
