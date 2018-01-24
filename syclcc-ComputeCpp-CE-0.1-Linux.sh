@@ -67,7 +67,7 @@ do
 #  $COMPUTECPP/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
-  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++0x -pthread -o $TMP/$FILENAME.o -c $FILEPATH
+  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH
 
   if ((COMPILE_ONLY)); then            # Handle -c
     if ((OFILE_NAMED)); then
@@ -79,5 +79,5 @@ do
 done
 
 if [ -z "$COMPILE_ONLY" ]; then
-  $HOST_CXX -std=c++0x -pthread $OBJFILES -o $OFILE -rdynamic $OPTS -O2 $DEBUG $CFLAGS $LIBPATHS -L$COMPUTECPP/lib/ -lComputeCpp -lOpenCL $LDFLAGS
+  $HOST_CXX -std=c++1z -pthread $OBJFILES -o $OFILE -rdynamic $OPTS -O2 $DEBUG $CFLAGS $LIBPATHS -L$COMPUTECPP/lib/ -lComputeCpp -lOpenCL $LDFLAGS
 fi
