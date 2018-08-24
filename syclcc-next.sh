@@ -27,6 +27,9 @@ RELEASES=(
 "ComputeCpp-CE-0.6.1-Ubuntu-16.04-64bit"
 "ComputeCpp-CE-0.7.0-Ubuntu-16.04-x86_64"
 "ComputeCpp-CE-0.8.0-Ubuntu-16.04-x86_64"
+"ComputeCpp-CE-0.9.0-Ubuntu-16.04-x86_64"
+"ComputeCpp-CE-0.9.1-Ubuntu-16.04-x86_64"
+"ComputeCpp-CE-1.0.0-Ubuntu-16.04-x86_64"
 )
 NUM_RELEASES=${#RELEASES[@]}
 
