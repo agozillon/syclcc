@@ -8,10 +8,10 @@
 
 usage() { echo syclcc: error: $2 >&2; exit $1; }
 
-[ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
+[ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
 
-COMPUTECPP_BASENAME=`basename "$COMPUTECPP"`
-SYCLCC_FILENAME=syclcc-$COMPUTECPP_BASENAME.sh
+COMPUTECPP_DIR_BASENAME=`basename "$COMPUTECPP_DIR"`
+SYCLCC_FILENAME=syclcc-$COMPUTECPP_DIR_BASENAME.sh
 $SYCLCC_FILENAME "$@"
 exit $?
 

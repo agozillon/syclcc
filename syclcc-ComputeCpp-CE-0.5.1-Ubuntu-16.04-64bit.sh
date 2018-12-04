@@ -11,7 +11,7 @@ HOST_CXX=/usr/bin/g++    # Don't use $CXX as $CXX may reference this script.
 usage() { echo syclcc: error: $2 >&2; exit $1; }
 
 [ $# -eq 0      ] && usage 1 "no input files"
-[ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
+[ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
   
 COMPILE_ONLY=0
 PREPROCESS_ONLY=0
@@ -61,20 +61,20 @@ do
 
   if ((PREPROCESS_ONLY)); then      # Handle -E
     if ((OFILE_NAMED)); then
-      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread -o $OFILE $FILEPATH
+      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP_DIR/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread -o $OFILE $FILEPATH
     else
-      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread           $FILEPATH
+      $HOST_CXX -E -DBUILD_PLATFORM_SPIR -I$COMPUTECPP_DIR/include $OPTS $CFLAGS $INCS $MACROS -std=c++1z -pthread           $FILEPATH
     fi
     continue
   fi
 
   FILENAME=_`echo $FILEPATH | tr '//' '#'`  # prepend _ and replace /s with #s
   OBJFILES="$TMP/$FILENAME.o $OBJFILES"
-  $COMPUTECPP/bin/compute++ -std=c++11 -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
- # $COMPUTECPP/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
+  $COMPUTECPP_DIR/bin/compute++ -std=c++11 -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP_DIR/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
+ # $COMPUTECPP_DIR/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP_DIR/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
-  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH
+  $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP_DIR/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH
 
   if ((COMPILE_ONLY)); then            # Handle -c
     if ((OFILE_NAMED)); then
@@ -86,5 +86,5 @@ do
 done
 
 if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then
-  $HOST_CXX -std=c++1z -pthread $OBJFILES -o $OFILE -rdynamic $OPTS -O2 $DEBUG $CFLAGS $LIBPATHS -L$COMPUTECPP/lib/ -lComputeCpp -lOpenCL $LDFLAGS
+  $HOST_CXX -std=c++1z -pthread $OBJFILES -o $OFILE -rdynamic $OPTS -O2 $DEBUG $CFLAGS $LIBPATHS -L$COMPUTECPP_DIR/lib/ -lComputeCpp -lOpenCL $LDFLAGS
 fi

@@ -7,7 +7,7 @@ if not_sourced; then
   exit 255
 fi
 
-[ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
+[ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
 
 RELEASES=(
 "ComputeCpp-15.10-Linux"
@@ -30,6 +30,8 @@ RELEASES=(
 "ComputeCpp-CE-0.9.0-Ubuntu-16.04-x86_64"
 "ComputeCpp-CE-0.9.1-Ubuntu-16.04-x86_64"
 "ComputeCpp-CE-1.0.0-Ubuntu-16.04-x86_64"
+"ComputeCpp-CE-1.0.1-Ubuntu-16.04-x86_64"
+"ComputeCpp-CE-1.0.2-Ubuntu-16.04-x86_64"
 )
 NUM_RELEASES=${#RELEASES[@]}
 
@@ -48,16 +50,16 @@ array_find() {
   return 255       # no match found
 }
 
-COMPUTECPP_BASENAME=`basename "$COMPUTECPP"`
-COMPUTECPP_DIRNAME=`dirname "$COMPUTECPP"`
+COMPUTECPP_DIR_BASENAME=`basename "$COMPUTECPP_DIR"`
+COMPUTECPP_DIR_DIRNAME=`dirname "$COMPUTECPP_DIR"`
 
-INDEX=$(array_find "$COMPUTECPP_BASENAME" "${RELEASES[@]}")
+INDEX=$(array_find "$COMPUTECPP_DIR_BASENAME" "${RELEASES[@]}")
 
 # Set the INDEX to 0 if it's the final index - else increment Index
 [[ $INDEX == $((NUM_RELEASES - 1)) ]] && INDEX=0 || INDEX=$((INDEX+1))
 
-NEWCOMPUTECPP="$COMPUTECPP_DIRNAME"/"${RELEASES[INDEX]}"
+NEWCOMPUTECPP_DIR="$COMPUTECPP_DIR_DIRNAME"/"${RELEASES[INDEX]}"
 
-COMPUTECPP=$NEWCOMPUTECPP
-LD_LIBRARY_PATH=$COMPUTECPP/lib:$LD_LIBRARY_PATH
-echo COMPUTECPP now set to $NEWCOMPUTECPP
+COMPUTECPP_DIR=$NEWCOMPUTECPP_DIR
+LD_LIBRARY_PATH=$COMPUTECPP_DIR/lib:$LD_LIBRARY_PATH
+echo COMPUTECPP_DIR now set to $NEWCOMPUTECPP_DIR

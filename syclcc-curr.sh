@@ -1,5 +1,5 @@
 #!/bin/bash
 
-[ -z "$COMPUTECPP" ] && usage 2 "create and initialise a COMPUTECPP environment var"
+[ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
 
-echo COMPUTECPP is set to $COMPUTECPP
+echo COMPUTECPP_DIR is set to $COMPUTECPP_DIR
