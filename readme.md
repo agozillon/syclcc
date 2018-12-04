@@ -23,6 +23,11 @@ be used to build the SYCL module for
 A native host compiler is assumed to be present; and this may be Clang or GCC.
 Simply modify the `HOST_CXX` entry at the top of the script invoked by `syclcc`.
 
+The `syclcc` script has been tested using the Intel OpenCL drivers on CPU.
+To ensure ComputeCpp is configured for this, the `COMPUTECPP_TARGET` environment
+variable should be set to `intel:cpu`. This setting can be the difference
+between runtime success, and a segmentation fault.
+
 You can also cycle through the version of ComputeCpp targeted by `syclcc` using
 three helper scripts. The scripts should be invoked using the linux `source`
 command (shown using the bash dot/period operator below), and assume that all
