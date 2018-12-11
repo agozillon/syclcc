@@ -6,11 +6,12 @@
      #                                                                   #
      #####################################################################
 
-TRISYCL_CXX=g++    # Don't use $CXX as $CXX may reference this script.
-
 usage() { echo trisyclcc: error: $2 >&2; exit $1; }
 
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$TRISYCL" ] && usage 2 "create and initialise a TRISYCL environment var"
+[ -z "$TRISYCL_TARGET" ] && usage 3 "create and initialise a TRISYCL_TARGET environment var"
 
-$TRISYCL_CXX -D__TRISYCL__ -I$TRISYCL/include "$@"
+TRISYCLCC_FILENAME=trisyclcc-$TRISYCL_TARGET.sh
+$TRISYCLCC_FILENAME "$@"
+exit $?
