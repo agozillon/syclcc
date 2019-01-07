@@ -61,18 +61,19 @@ do
 
   if ((PREPROCESS_ONLY)); then      # Handle -E
     if ((OFILE_NAMED)); then
-      $HOST_CXX -E -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS -std=c++17 -D_OPENMP -I$TRISYCL/include -o $OFILE $FILEPATH
+      $HOST_CXX -E -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS $DEBUG -O3 -std=c++17 -fopenmp -I$TRISYCL/include -o $OFILE $FILEPATH
     else
-      $HOST_CXX -E -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS -std=c++17 -D_OPENMP -I$TRISYCL/include           $FILEPATH
+      $HOST_CXX -E -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS $DEBUG -O3 -std=c++17 -fopenmp -I$TRISYCL/include           $FILEPATH
     fi
     continue
   fi
 
   FILENAME=_`echo $FILEPATH | tr '//' '#'`  # prepend _ and replace /s with #s
   OBJFILES="$TMP/$FILENAME.o $OBJFILES"
-  $HOST_CXX -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS -O3 -std=c++17 -D_OPENMP -I$TRISYCL/include -o $TMP/$FILENAME.o -c $FILEPATH
+  $HOST_CXX -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS $DEBUG -O3 -std=c++17 -fopenmp -I$TRISYCL/include -o $TMP/$FILENAME.o -c $FILEPATH
   # debug flags -ferror-limit=500
   # $HOST_CXX -Wall -Wno-ignored-attributes -pthread $OPTS $CFLAGS $INCS $MACROS $DEBUG -O3 -std=c++17 -D_OPENMP -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK -I$TRISYCL/include -o $TMP/$FILENAME.o -c $FILEPATH
+  # $HOST_CXX -Wall -Wno-ignored-attributes -S -emit-llvm -pthread $OPTS $CFLAGS $INCS $MACROS $DEBUG -std=c++17 -D_OPENMP -DNDEBUG -DTRISYCL_DEBUG -DBOOST_LOG_DYN_LINK -I$TRISYCL/include -o $FILENAME.llvm -c $FILEPATH
 
   if ((COMPILE_ONLY)); then            # Handle -c
     if ((OFILE_NAMED)); then
@@ -84,5 +85,5 @@ do
 done
 
 if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then
-  $HOST_CXX -Wall -Wno-ignored-attributes -pthread $OBJFILES -o $OFILE -rdynamic $OPTS $CFLAGS $LIBPATHS -O3 -std=c++17 -D_OPENMP -I$TRISYCL/include $LDFLAGS
+  $HOST_CXX -Wall -Wno-ignored-attributes -pthread $OBJFILES -o $OFILE -rdynamic $OPTS $CFLAGS $LIBPATHS -O3 -std=c++17 -fopenmp -I$TRISYCL/include $LDFLAGS
 fi
