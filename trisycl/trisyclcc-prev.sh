@@ -17,6 +17,7 @@ fi
 
 TARGETS=(
 "OpenMP"
+"TBB"
 "OpenCL"
 "sw_emu"
 "hw_emu"
@@ -45,5 +46,16 @@ INDEX=$(array_find "$TRISYCL_TARGET" "${TARGETS[@]}")
 [[ $INDEX == 0 ]] && INDEX=$((NUM_TARGETS-1)) || INDEX=$((INDEX-1))
 
 TRISYCL_TARGET="${TARGETS[INDEX]}"
+
+SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ "$TRISYCL_TARGET" = "OpenCL" ] ; then
+  source $SCRIPT_PATH/set_environment_scripts/pocl.sh
+fi
+
+# Just sets some BOOST Compute enviornment variables back to nothing
+if [ "$TRISYCL_TARGET" = "OpenMP" ] || [ "$TRISYCL_TARGET" = "TBB" ]; then
+  source $SCRIPT_PATH/set_environment_scripts/reset.sh
+fi
 
 echo TRISYCL_TARGET now set to $TRISYCL_TARGET

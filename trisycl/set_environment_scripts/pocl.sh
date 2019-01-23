@@ -1,0 +1,2 @@
+export BOOST_COMPUTE_DEFAULT_ENFORCE=1
+export BOOST_COMPUTE_DEFAULT_PLATFORM='Portable Computing Language'
