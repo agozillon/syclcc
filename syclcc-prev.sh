@@ -25,16 +25,15 @@ RELEASES=(
 "ComputeCpp-CE-0.5.1-Ubuntu-16.04-64bit"
 "ComputeCpp-CE-0.6.0-Ubuntu-16.04-64bit"
 "ComputeCpp-CE-0.6.1-Ubuntu-16.04-64bit"
-"ComputeCpp-CE-0.7.0-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-0.8.0-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-0.9.0-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-0.9.1-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-1.0.0-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-1.0.1-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-1.0.2-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-1.0.3-Ubuntu-16.04-x86_64"
-"ComputeCpp-CE-1.0.4-Ubuntu-16.04-x86_64"
 )
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+for SCRIPTPATH in "$SCRIPTDIR"/syclcc-ComputeCpp*Ubuntu-16.04-x86_64.sh
+do
+  BN=("$(basename "$SCRIPTPATH")") # Drop the base part of the sh filepath
+  RELEASES+=(${BN:7:39})           # Select 39 chars start at char 
+done
+
 NUM_RELEASES=${#RELEASES[@]}
 
 array_find() {
