@@ -2,7 +2,7 @@
 
    ##########################################################################
    #                                                                        #
-   # Copyright (c) 2016-2017 Paul Keir, University of the West of Scotland. #
+   #   Copyright (c) 2019 Paul Keir, University of the West of Scotland.    #
    #                                                                        #
    ##########################################################################
 
@@ -11,7 +11,15 @@ usage() { echo syclcc: error: $2 >&2; exit $1; }
 [ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
 
 COMPUTECPP_DIR_BASENAME=`basename "$COMPUTECPP_DIR"`
-SYCLCC_FILENAME=syclcc-$COMPUTECPP_DIR_BASENAME.sh
+
+VERSION=`echo $COMPUTECPP_DIR_BASENAME | cut -d - -f3 | tr -d .`
+ UBUNTU=`echo $COMPUTECPP_DIR_BASENAME | cut -d - -f4`
+if [[ $UBUNTU == "Ubuntu" && $VERSION -ge 050 ]]; then
+  SYCLCC_FILENAME=syclcc-ComputeCpp-CE-X.Y.Z-Ubuntu-16.04-x86_64.sh
+else
+  SYCLCC_FILENAME=syclcc-$COMPUTECPP_DIR_BASENAME.sh
+fi
+
 $SYCLCC_FILENAME "$@"
 exit $?
 
