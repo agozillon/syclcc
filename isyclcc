@@ -1,0 +1,16 @@
+#!/bin/bash
+
+   ##########################################################################
+   #                                                                        #
+   #   Copyright (c) 2019 Paul Keir, University of the West of Scotland.    #
+   #                                                                        #
+   ##########################################################################
+
+usage() { echo isyclcc: error: $2 >&2; exit $1; }
+
+[ $# -eq 0      ] && usage 1 "no input files"
+[ -z "$INTELSYCL_DIR" ] && usage 2 "create and initialise a INTELSYCL_DIR environment var"
+
+$INTELSYCL_DIR/bin/clang++ -std=c++11 -fsycl -lOpenCL "$@"
+exit $?
+
