@@ -17,10 +17,11 @@ PREPROCESS_ONLY=0
 while [[ $# > 0 ]]; do
 
   case "$1" in
-    -E)  PREPROCESS_ONLY=1; CMD="$CMD $1" ;;
-    -c)     COMPILE_ONLY=1; CMD="$CMD $1" ;;
-    -? )  CMD="$CMD $1 $2"; shift     ;; # e.g. -I /path/a/b or -L /foo
-    -?*)  CMD="$CMD $1"              ;; # e.g. -I/path/a/b or -O3
+    -E)   PREPROCESS_ONLY=1; CMD="$CMD $1" ;;
+    -c)      COMPILE_ONLY=1; CMD="$CMD $1" ;;
+    -g)                                    ;;
+    -? )  CMD="$CMD $1 $2"; shift          ;; # e.g. -I /path/a/b or -L /foo
+    -?*)  CMD="$CMD $1"                    ;; # e.g. -I/path/a/b or -O3
     *)    EXT=${1##*.}
           if [[ $EXT = 'a' ]]; then
             CMD="$CMD -foffload-static-lib=$1"
