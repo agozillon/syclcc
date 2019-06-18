@@ -11,9 +11,6 @@ usage() { echo isyclcc: error: $2 >&2; exit $1; }
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$INTELSYCL_DIR" ] && usage 2 "create and initialise a INTELSYCL_DIR environment var"
 
-#$INTELSYCL_DIR/bin/clang++ -std=c++11 -fsycl -lOpenCL "$@"
-#exit $?
-
 COMPILE_ONLY=0
 PREPROCESS_ONLY=0
 
@@ -35,6 +32,7 @@ while [[ $# > 0 ]]; do
   shift # $2 becomes $1; $3 becomes $2 etc.
 done
 
-if ((COMPILE_ONLY || PREPROCESS_ONLY)); then CMD="$CMD -lOpenCL"; fi
+if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then CMD="$CMD -lOpenCL"; fi
 
-$INTELSYCL_DIR/bin/clang++ -std=c++11 -fsycl "$CMD"
+$INTELSYCL_DIR/bin/clang++ -std=c++11 -fsycl $CMD
+exit $?
