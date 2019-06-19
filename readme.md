@@ -10,9 +10,9 @@ GCC. For example:
 assuming you have added the location of `syclcc` to your `PATH` environment
 variable. `syclcc` is a simple script which calls the main script aligned with
 the version of Codeplay's ComputeCpp which you are working with. The version of
-ComputeCpp targeted is determined by the environment variable, `COMPUTECPP`,
-which you should set up. `COMPUTECPP` should reference the root directory of
-your ComputeCpp installation, and so `$COMPUTECPP/bin/compute++` should invoke
+ComputeCpp targeted is determined by the environment variable, `COMPUTECPP_DIR`,
+which you should set up. `COMPUTECPP_DIR` should reference the root directory of
+your ComputeCpp installation, and so `$COMPUTECPP_DIR/bin/compute++` should invoke
 Codeplay's `compute++` compiler.
 
 These scripts can be tested with any C++ files; as well as Codeplay's own SYCL
@@ -72,4 +72,5 @@ The scripts work with the following versions of ComputeCpp:
 * ComputeCpp-CE-1.1.0-Ubuntu-16.04-x86_64.sh
 * ComputeCpp-CE-1.1.1-Ubuntu-16.04-x86_64.sh
 * ComputeCpp-CE-1.1.2-Ubuntu-16.04-x86_64.sh
+* ComputeCpp-CE-1.1.3-Ubuntu-16.04-x86_64.sh
 
