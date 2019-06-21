@@ -26,6 +26,6 @@ done
 
 if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then CMD="$CMD -L $COMPUTECPP_DIR/lib -lComputeCpp"; fi
 
-$COMPUTECPP_DIR/bin/compute++ -O2 -mllvm -inline-threshold=1000 -sycl-driver -sycl-target spir64 -no-serial-memop -I $COMPUTECPP_DIR/include -std=c++11 $CMD
+$COMPUTECPP_DIR/bin/compute++ -O2 -mllvm -inline-threshold=1000 -Wno-unused-command-line-argument -sycl-driver -sycl-target spir64 -no-serial-memop -I $COMPUTECPP_DIR/include -std=c++11 $CMD
 
 exit $?
