@@ -6,20 +6,32 @@
      #                                                                   #
      #####################################################################
 
-# For now, use GCC-4.9: it seems more recent GCCs (e.g. GCC 5.3) use a very
-# different std::string implementation. ComputeCpp's
-# create_program_for_kernel_impl uses a std::string argument, and exists
-# in compiled form in libComputeCpp.so
-
-#HOST_CXX=/usr/bin/g++    # Don't use $CXX as $CXX may reference this script.
-HOST_CXX=/usr/bin/g++-4.9    # Don't use $CXX as $CXX may reference this script.
+HOST_CXX=/usr/bin/g++    # Don't use $CXX as $CXX may reference this script.
 
 usage() { echo syclcc: error: $2 >&2; exit $1; }
 
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
-
+  
+USE_HOST=0
 OFILE="a.out"
+
+# Simpler and easier to read than the alternative but obviously the slight cost
+# of looping over the arguments twice, this simply skims the arguments for the 
+# driver specific option and compiles with the host compiler then early exits
+for var in $@
+do
+case $var in
+    -syclcc-use-host) USE_HOST=1; CMD="$CMD" ;;
+    *)                       CMD="$CMD $var" ;;
+esac
+done
+
+if ((USE_HOST)); then
+  $HOST_CXX $CMD
+  exit $?
+fi
+
 while [[ $# > 0 ]]; do
 
   case "$1" in
@@ -33,12 +45,16 @@ while [[ $# > 0 ]]; do
     -D?*)       MACROS="$MACROS $1";       ;;
     -L?*)     LIBPATHS="$LIBPATHS $1";     ;;
     -l?*)      LDFLAGS="$LDFLAGS $1"       ;;
+    -Wl?*)     LDFLAGS="$LDFLAGS $1"       ;;
     -O?*)         OPTS="$OPTS $1";         ;; # e.g. -O3
     -f?*)       CFLAGS="$CFLAGS $1"        ;; # consider ;& for some code golf
     -v)         CFLAGS="$CFLAGS $1"        ;;
-    -g)          DEBUG="$1"                ;; # n.b. This would kill compute++
+    -dM)        CFLAGS="$CFLAGS $1"        ;;
+    -E) PREPROCESS_ONLY=1                  ;; # stop after preprocessing stage
+    -g)          DEBUG="$1"                ;; # still doesn't work with CE 0.5
     -std=?*)    CFLAGS="$CFLAGS $1"        ;;
     -rdynamic) LDFLAGS="$LDFLAGS $1"       ;;
+    -shared)   LDFLAGS="$LDFLAGS $1"       ;;
     -o?*) OFILE=${1:2}; OFILE_NAMED=1;     ;; # "-o" = the 2 dropped chars
     -c)   COMPILE_ONLY=1                   ;;
     -*)   usage -1 "flags: $1"             ;;
@@ -64,7 +80,7 @@ do
   FILENAME=_`echo $FILEPATH | tr '//' '#'`  # prepend _ and replace /s with #s
   OBJFILES="$TMP/$FILENAME.o $OBJFILES"
   $COMPUTECPP_DIR/bin/compute++ -std=c++0x -no-serial-memop $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP_DIR/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
-#  $COMPUTECPP_DIR/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP_DIR/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
+ # $COMPUTECPP_DIR/bin/compute++ -std=c++0x $OPTS -O2 -sycl -emit-llvm -I$COMPUTECPP_DIR/include $CFLAGS $INCS $MACROS -o $TMP/$FILENAME.bc -c $FILEPATH
 
   INCFLAG="-include $TMP/$FILENAME.sycl"
   $HOST_CXX -DBUILD_PLATFORM_SPIR -I$COMPUTECPP_DIR/include -I$TMP $OPTS -O2 $DEBUG $CFLAGS $INCS $MACROS $INCFLAG -std=c++1z -pthread -o $TMP/$FILENAME.o -c $FILEPATH

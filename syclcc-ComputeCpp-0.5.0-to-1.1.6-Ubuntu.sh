@@ -15,7 +15,25 @@ usage() { echo syclcc: error: $2 >&2; exit $1; }
   
 COMPILE_ONLY=0
 PREPROCESS_ONLY=0
+USE_HOST=0
 OFILE="a.out"
+
+# Simpler and easier to read than the alternative but obviously the slight cost
+# of looping over the arguments twice, this simply skims the arguments for the 
+# driver specific option and compiles with the host compiler then early exits
+for var in $@
+do
+case $var in
+    -syclcc-use-host) USE_HOST=1; CMD="$CMD" ;;
+    *)                       CMD="$CMD $var" ;;
+esac
+done
+
+if ((USE_HOST)); then
+  $HOST_CXX $CMD
+  exit $?
+fi
+
 while [[ $# > 0 ]]; do
 
   case "$1" in
@@ -29,6 +47,7 @@ while [[ $# > 0 ]]; do
     -D?*)       MACROS="$MACROS $1";       ;;
     -L?*)     LIBPATHS="$LIBPATHS $1";     ;;
     -l?*)      LDFLAGS="$LDFLAGS $1"       ;;
+    -Wl?*)     LDFLAGS="$LDFLAGS $1"       ;;
     -O?*)         OPTS="$OPTS $1";         ;; # e.g. -O3
     -f?*)       CFLAGS="$CFLAGS $1"        ;; # consider ;& for some code golf
     -v)         CFLAGS="$CFLAGS $1"        ;;
@@ -37,6 +56,7 @@ while [[ $# > 0 ]]; do
     -g)          DEBUG="$1"                ;; # still doesn't work with CE 0.5
     -std=?*)    CFLAGS="$CFLAGS $1"        ;;
     -rdynamic) LDFLAGS="$LDFLAGS $1"       ;;
+    -shared)   LDFLAGS="$LDFLAGS $1"       ;;
     -o?*) OFILE=${1:2}; OFILE_NAMED=1;     ;; # "-o" = the 2 dropped chars
     -c)   COMPILE_ONLY=1                   ;;
     -*)   usage -1 "flags: $1"             ;;

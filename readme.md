@@ -67,10 +67,40 @@ The scripts work with the following versions of ComputeCpp:
 * ComputeCpp-CE-1.0.1-Ubuntu-16.04-x86_64
 * ComputeCpp-CE-1.0.2-Ubuntu-16.04-x86_64
 * ComputeCpp-CE-1.0.3-Ubuntu-16.04-x86_64
-* ComputeCpp-CE-1.0.4-Ubuntu-16.04-x86_64.sh
-* ComputeCpp-CE-1.0.5-Ubuntu-16.04-x86_64.sh
-* ComputeCpp-CE-1.1.0-Ubuntu-16.04-x86_64.sh
-* ComputeCpp-CE-1.1.1-Ubuntu-16.04-x86_64.sh
-* ComputeCpp-CE-1.1.2-Ubuntu-16.04-x86_64.sh
-* ComputeCpp-CE-1.1.3-Ubuntu-16.04-x86_64.sh
+* ComputeCpp-CE-1.0.4-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.0.5-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.0-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.1-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.2-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.3-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.4-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.5-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.1.6-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.2.0-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-1.3.0-Ubuntu-16.04-x86_64
+* ComputeCpp-CE-2.0.0-x86_64-linux-gnu
 
+### SYCLCC Specific Commands
+
+* -syclcc-use-host : This tells the syclcc driver to use the host compiler 
+  rather than the SYCL compiler. Largely to work around the inability to easily 
+  swap between compilers within CMake build systems.
+
+### SYCLCC Enviornment Variables
+
+* - HOST_CXX : Assign a host compiler to use in place of the SYCL compiler, it 
+    will default to g++ if unspecified.
+* - SYCLCC_COMPUTECPP_BACKEND : This will be used as an argument to ComputeCpp's
+    -sycl-target compiler command line option. The argument listing is the same.
+    For example, spirv64, spir64, ptx64 etc. This allows you to swap between
+    different SYCL backend targets to allow targeting different devices.
+* - COMPUTECPP_DIR : point to a directory contianing ComputeCpp. The parent 
+    directory may contain multiple ComputeCpp versions to allow easy swapping 
+    between versions using the sycl-next/sycl-curr scripts.
+
+### Other Scripts
+
+* - bsyclcc : A simple ComputeCpp compile recipe for use with newer versions of
+  ComputeCpp, currently used by syclcc for ComputeCpp versions 1.2.0+
+* - isyclcc - A driver script for Intel's DPC++ SYCL compiler, currently 
+  standalone and not integrated with syclcc.
