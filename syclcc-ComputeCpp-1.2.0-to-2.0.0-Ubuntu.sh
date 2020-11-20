@@ -6,7 +6,7 @@
    #                                                                        #
    ##########################################################################
 
-usage() { echo bsyclcc: error: $2 >&2; exit $1; }
+usage() { echo syclcc: error: $2 >&2; exit $1; }
 
 [ $# -eq 0      ] && usage 1 "no input files"
 [ -z "$COMPUTECPP_DIR" ] && usage 2 "create and initialise a COMPUTECPP_DIR environment var"
