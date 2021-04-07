@@ -28,7 +28,8 @@ done
 if ((!USE_GCC)); then
   if ((!COMPILE_ONLY && !PREPROCESS_ONLY)); then CMD="$CMD -L $COMPUTECPP_DIR/lib -lComputeCpp"; fi
 
-  $COMPUTECPP_DIR/bin/compute++ -O2 -mllvm -inline-threshold=1000 -Wno-unused-command-line-argument -sycl-driver -sycl-target spir64 -no-serial-memop -I $COMPUTECPP_DIR/include -std=c++14 $CMD
+# SYCL_LANGUAGE_VERSION can also be 2017
+  $COMPUTECPP_DIR/bin/compute++ -O2 -mllvm -inline-threshold=1000 -Wno-unused-command-line-argument -sycl-driver -sycl-target spir64 -no-serial-memop -I $COMPUTECPP_DIR/include -std=c++17 -DSYCL_LANGUAGE_VERSION=202001 $CMD
 else
   g++ $CMD
 fi
